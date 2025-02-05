@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Bot Changelog</title>
+    <style>
+        :root {
+            --timeline-width: 2px;
+            --dot-size: 12px;
+            --timeline-color: rgba(255, 255, 255, 0.85);
+            --active-dot-color: #ffffff;
+            --inactive-dot-color: rgba(255, 255, 255, 0.3);
+            --dot-border: 2px;
+            --bg-color: #000000;
+            --card-bg: #111111;
+            --card-hover: #1a1a1a;
+            --accent-color: #ffffff;
+            --glow-color: rgba(255, 255, 255, 0.9);
+            --blur-strength: 20px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #fff;
+            background: 
+                radial-gradient(circle at top right, rgba(255, 255, 255, 0.1) 0%, transparent 60%),
+                radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+                var(--bg-color);
+            min-height: 100vh;
+            background-image: linear-gradient(to bottom, #000000, #111111);
+            opacity: 0;
+            animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, var(--timeline-color) 0%, transparent 100%);
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+            color: #fff;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.3),
+                0 0 10px rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.2);
+            letter-spacing: -0.5px;
+            font-weight: 800;
+            background: none;
+            -webkit-text-fill-color: #fff;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-left: 0.2rem;
+            letter-spacing: 0.3px;
+            text-shadow: 
+                1px 1px 1px rgba(0, 0, 0, 0.2),
+                0 0 8px rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: calc(var(--dot-size) / 2);
+            top: 24px;
+            bottom: 24px;
+            width: 3px;
+            background: linear-gradient(180deg, 
+                var(--timeline-color) 0%,
+                rgba(255, 255, 255, 0.2) 100%);
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(255, 255, 255, 0.05);
+        }
+
+        .version-block {
+            position: relative;
+            margin-bottom: 4rem;
+            padding-left: 2rem;
+            color: white;
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: calc(0.5s + (var(--animation-order, 0) * 0.2s));
+        }
+
+        .version-block::before {
+            content: '';
+            position: absolute;
+            left: -23px;
+            top: 12px;
+            width: var(--dot-size);
+            height: var(--dot-size);
+            background: var(--inactive-dot-color);
+            border: var(--dot-border) solid var(--timeline-color);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .version-block::after {
+            content: '';
+            position: absolute;
+            left: -23px;
+            top: 12px;
+            width: var(--dot-size);
+            height: var(--dot-size);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .version-block:not(.inactive)::before {
+            background: var(--active-dot-color);
+            border: none;
+            box-shadow: 
+                0 0 0 2px var(--active-dot-color),
+                0 0 15px var(--glow-color),
+                0 0 25px var(--glow-color);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .version-block.inactive::before {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: none;
+        }
+
+        .version-header {
+            margin-bottom: 2rem;
+            padding: 1.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(var(--blur-strength));
+            transform: translateY(0);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .version-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .version-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .version-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #ffffff;
+            -webkit-text-fill-color: initial;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .release-date {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .version-status {
+            margin-left: auto;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 30px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.3s ease;
+        }
+
+        .version-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .version-status:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .version-block.inactive .version-status {
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .version-block.inactive .version-status::before {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: none;
+        }
+
+        .keypoints {
+            list-style: none;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.8rem;
+            margin-top: 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(var(--blur-strength));
+            transform: translateY(0);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .keypoints:hover {
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .keypoint {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: fadeInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: calc(1.2s + (var(--keypoint-order, 0) * 0.1s));
+        }
+
+        .keypoint:last-child {
+            margin-bottom: 0;
+        }
+
+        .keypoint h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .keypoint h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .keypoint:hover h4::before {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .keypoint p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .keypoint:hover {
+            transform: none;
+            background: none;
+        }
+
+        .keypoint:hover h4 {
+            color: #fff;
+        }
+
+        .keypoint:hover p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-brand img {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-brand span {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-brand span::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a.invite-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.5rem 1.2rem;
+        }
+
+        .nav-links a.invite-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.9),
+                transparent
+            );
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+            transform: translateY(-2px) scale(1.05);
+            text-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.5),
+                0 0 25px rgba(255, 255, 255, 0.3),
+                0 0 35px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a:hover::before {
+            transform: translateX(0);
+            animation: glow 1.5s linear infinite;
+        }
+
+        .nav-links a i {
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-links a:hover i {
+            transform: scale(1.15) rotate(-5deg);
+            color: #fff;
+            text-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.5),
+                0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-links a span {
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover span {
+            color: #fff;
+            text-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.5),
+                0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-links a.github-link {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-links a.github-link:hover {
+            color: #fff;
+            transform: translateY(-2px) scale(1.08);
+        }
+
+        @keyframes glow {
+            0%, 50%, 100% {
+                text-shadow: none;
+            }
+        }
+
+        /* Update the nav items to wrap text in span */
+        .nav-items a {
+            white-space: nowrap;
+        }
+
+        .nav-items a i {
+            margin-right: 0.2rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .timeline {
+                padding-left: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .version-header {
+                padding: 1.5rem;
+            }
+
+            .keypoints {
+                padding: 1.5rem;
+            }
+
+            .nav-links {
+                padding: 0 1rem;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 
+                    0 0 0 2px var(--active-dot-color),
+                    0 0 10px var(--glow-color),
+                    0 0 20px var(--glow-color),
+                    0 0 30px var(--glow-color);
+            }
+            50% {
+                box-shadow: 
+                    0 0 0 2px var(--active-dot-color),
+                    0 0 15px var(--glow-color),
+                    0 0 25px var(--glow-color),
+                    0 0 35px var(--glow-color);
+            }
+            100% {
+                box-shadow: 
+                    0 0 0 2px var(--active-dot-color),
+                    0 0 10px var(--glow-color),
+                    0 0 20px var(--glow-color),
+                    0 0 30px var(--glow-color);
+            }
+        }
+
+        /* Add Font Awesome for icons */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+        /* Version block animation order */
+        .version-block:nth-child(1) { --animation-order: 1; }
+        .version-block:nth-child(2) { --animation-order: 2; }
+        .version-block:nth-child(3) { --animation-order: 3; }
+
+        /* Keypoint animations */
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Add animation order for keypoints */
+        .keypoint:nth-child(1) { --keypoint-order: 1; }
+        .keypoint:nth-child(2) { --keypoint-order: 2; }
+        .keypoint:nth-child(3) { --keypoint-order: 3; }
+        .keypoint:nth-child(4) { --keypoint-order: 4; }
+        .keypoint:nth-child(5) { --keypoint-order: 5; }
+        .keypoint:nth-child(6) { --keypoint-order: 6; }
+        .keypoint:nth-child(7) { --keypoint-order: 7; }
+        .keypoint:nth-child(8) { --keypoint-order: 8; }
+        .keypoint:nth-child(9) { --keypoint-order: 9; }
+        .keypoint:nth-child(10) { --keypoint-order: 10; }
+        .keypoint:nth-child(11) { --keypoint-order: 11; }
+        .keypoint:nth-child(12) { --keypoint-order: 12; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <div class="nav-brand">
+                <img src="https://wallpapersok.com/images/high/a-purple-eye-with-purple-eyes-on-a-black-background-n619iwueli7docp7.jpg" alt="YOU music">
+                <span>YOU music</span>
+            </div>
+            <div class="nav-items">
+                <a href="docs.html"><i class="fas fa-book"></i><span>Docs</span></a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1336448011579953223&permissions=8&integration_type=0&scope=bot+applications.commands" class="invite-btn"><i class="fas fa-plus"></i><span>Add to Discord</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Music Bot Changelog</h1>
+            <p>Track our journey of continuous improvements</p>
+        </header>
+
+        <div class="timeline">
+            <div class="version-block">
+                <div class="version-header">
+                    <div class="version-info">
+                        <span class="version-number">v0.1.0</span>
+                        <span class="release-date">February 4, 2025</span>
+                    </div>
+                    <span class="version-status">Current</span>
+                </div>
+
+                <ul class="keypoints">
+                    <li class="keypoint">
+                        <h4>Discord Music Commands</h4>
+                        <p>Core commands: /play, /pause, /resume, /skip, /stop, /queue for easy music control in your server</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>YouTube Integration</h4>
+                        <p>High-quality YouTube playback (192k) with automatic format selection and efficient streaming</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Spotify Support</h4>
+                        <p>Play music from Spotify links: tracks, albums, shows, and podcasts with automatic YouTube conversion</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>YouTube Playlists</h4>
+                        <p>Full playlist support with background processing and instant playback start using //playlist command</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Spotify Playlists</h4>
+                        <p>Load entire Spotify playlists with track preview, background processing, and progress tracking</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Queue Features</h4>
+                        <p>View queue, clear queue, loop mode, and dynamic queue management with real-time updates</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Local File Support</h4>
+                        <p>Play local MP3 files with metadata extraction and high-quality playback up to 25MB</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Real-time Progress</h4>
+                        <p>Dynamic progress bar with time tracking and smooth animations for all playback types</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Smart Search</h4>
+                        <p>Intelligent search across platforms with popularity ranking and fuzzy matching for best results</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Server Stability</h4>
+                        <p>Auto-reconnection, voice channel management, and stream recovery for 24/7 uptime</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Multi-Server Support</h4>
+                        <p>Stable performance across multiple Discord servers with independent queues</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Error Prevention</h4>
+                        <p>Comprehensive error handling with user-friendly messages and automatic recovery</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="version-block inactive">
+                <div class="version-header">
+                    <div class="version-info">
+                        <span class="version-number">v0.2.0</span>
+                        <span class="release-date">Coming Soon</span>
+                    </div>
+                    <span class="version-status">Planned</span>
+                </div>
+
+                <ul class="keypoints">
+                    <li class="keypoint">
+                        <h4>Music Recommendations</h4>
+                        <p>Smart song suggestions based on your server's music taste, personalized playlists, and discover similar tracks from your favorite artists with AI-powered music matching</p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Live Lyrics Display</h4>
+                        <p>Real-time synchronized lyrics, support for multiple languages, karaoke mode with timing markers, and automatic lyrics search across multiple sources</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
