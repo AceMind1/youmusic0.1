@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOU music - Troubleshooting</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #0a0a0a;
+            --card-hover: #111111;
+            --accent-color: #ffffff;
+            --text-color: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glow-color: rgba(255, 255, 255, 0.5);
+            --white-glow: rgba(255, 255, 255, 0.8);
+            --gradient-start: #ffffff;
+            --gradient-end: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(to bottom, #000000, #050505);
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1.4rem 0;
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-brand img {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-brand span {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--text-color);
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-brand span::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.6rem 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.9),
+                transparent
+            );
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .nav-links a:hover::before {
+            transform: translateX(0);
+            animation: glow 1.5s linear infinite;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+            padding: 1.8rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--bg-color);
+            background: rgba(10, 10, 10, 0.98);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.02);
+        }
+
+        .sidebar-category {
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 2rem 0 1rem 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-category::before {
+            content: '◆';
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            width: auto;
+            height: auto;
+            background-image: none;
+            background-size: auto;
+            border-radius: 0;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
+            transform: translateX(3px);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            padding-left: 1.5rem;
+        }
+
+        .sidebar-link:hover::before {
+            opacity: 1;
+        }
+
+        .content {
+            background: rgba(15, 15, 15, 0.98);
+            padding: 3rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #fff, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            border-radius: 2px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1.5rem;
+            color: var(--text-color);
+            padding-bottom: 0.8rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            border-radius: 1px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--text-color);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .troubleshooting-item {
+            background: rgba(15, 15, 15, 0.98);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.02);
+        }
+
+        .troubleshooting-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            padding: 1px;
+        }
+
+        .troubleshooting-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .troubleshooting-item:hover::before {
+            opacity: 1;
+        }
+
+        .troubleshooting-item h4 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .troubleshooting-item h4::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-image: url('https://wallpapersok.com/images/high/a-purple-eye-with-purple-eyes-on-a-black-background-n619iwueli7docp7.jpg');
+            background-size: cover;
+            border-radius: 4px;
+        }
+
+        .troubleshooting-item p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 2rem;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution ol {
+            list-style: none;
+            counter-reset: solution-counter;
+            padding-left: 0;
+        }
+
+        .solution li {
+            counter-increment: solution-counter;
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .solution li::before {
+            content: counter(solution-counter);
+            position: absolute;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .note {
+            background: transparent;
+            border: none;
+            margin: 3rem 0;
+            padding: 2rem 0 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+            border-left: 4px solid #4CAF50;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .note::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background-image: url('https://wallpapersok.com/images/high/a-purple-eye-with-purple-eyes-on-a-black-background-n619iwueli7docp7.jpg');
+            background-size: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+
+        .note::after {
+            display: none;
+        }
+
+        .note strong {
+            color: #4CAF50;
+            -webkit-text-fill-color: initial;
+            background: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.3),
+                           0 0 10px rgba(255, 255, 255, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                           0 0 20px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                height: auto;
+                margin-bottom: 2rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <div class="nav-brand">
+                <img src="https://wallpapersok.com/images/high/a-purple-eye-with-purple-eyes-on-a-black-background-n619iwueli7docp7.jpg" alt="YOU music">
+                <span>YOU music</span>
+            </div>
+            <div class="nav-items">
+                <a href="index.html"><i class="fas fa-history"></i><span>Changelog</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="docs-grid">
+            <div class="sidebar">
+                <div class="sidebar-category">Common Issues</div>
+                <a href="#no-sound" class="sidebar-link">No Sound Playing</a>
+                <a href="#connection-issues" class="sidebar-link">Connection Issues</a>
+                <a href="#playback-errors" class="sidebar-link">Playback Errors</a>
+                <a href="#queue-issues" class="sidebar-link">Queue Issues</a>
+                <a href="#command-errors" class="sidebar-link">Command Errors</a>
+                
+                <div class="sidebar-category">Platform-Specific</div>
+                <a href="#youtube-issues" class="sidebar-link">YouTube Issues</a>
+                <a href="#spotify-issues" class="sidebar-link">Spotify Issues</a>
+                <a href="#local-files" class="sidebar-link">Local File Issues</a>
+            </div>
+
+            <div class="content">
+                <h1>Troubleshooting Guide</h1>
+                <p>Find solutions to common issues and problems you might encounter while using YOU music bot.</p>
+
+                <section id="no-sound" class="section">
+                    <h2>No Sound Playing</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>Bot is in voice channel but no audio</h4>
+                        <p>When the bot is connected but you can't hear any sound.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Check if the bot has proper permissions (View Channel, Connect, Speak)</li>
+                                <li>Verify your own volume settings in Discord</li>
+                                <li>Try disconnecting and reconnecting the bot</li>
+                                <li>Check if the bot is not muted in your Discord settings</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="connection-issues" class="section">
+                    <h2>Connection Issues</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>Bot won't join voice channel</h4>
+                        <p>When the bot fails to join your voice channel.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Ensure you're in a voice channel before using commands</li>
+                                <li>Check if the bot has permission to join the channel</li>
+                                <li>Verify the channel user limit isn't reached</li>
+                                <li>Try moving to a different voice channel</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="troubleshooting-item">
+                        <h4>Bot disconnects randomly</h4>
+                        <p>When the bot unexpectedly leaves the voice channel.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Check your server's region settings</li>
+                                <li>Ensure stable internet connection</li>
+                                <li>Verify if the bot has been inactive for too long</li>
+                                <li>Check if the bot is experiencing high load</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="playback-errors" class="section">
+                    <h2>Playback Errors</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>Audio stuttering or lag</h4>
+                        <p>When the music playback is not smooth.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Check your internet connection stability</li>
+                                <li>Try lowering the audio quality using /settings</li>
+                                <li>Ensure no bandwidth-heavy activities are running</li>
+                                <li>Consider switching to a closer server region</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="queue-issues" class="section">
+                    <h2>Queue Issues</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>Queue not updating</h4>
+                        <p>When the queue appears stuck or doesn't update properly.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Use /queue refresh to force a queue update</li>
+                                <li>Clear the queue and add songs again</li>
+                                <li>Check if the bot has proper permissions</li>
+                                <li>Restart the bot in your server</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="command-errors" class="section">
+                    <h2>Command Errors</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>Commands not responding</h4>
+                        <p>When the bot doesn't respond to commands.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Verify the command syntax is correct</li>
+                                <li>Check if the bot has proper permissions</li>
+                                <li>Ensure you're using commands in the correct channel</li>
+                                <li>Wait a few seconds between commands</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="youtube-issues" class="section">
+                    <h2>YouTube Issues</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>YouTube playback fails</h4>
+                        <p>When YouTube links don't play properly.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Check if the video is available in your region</li>
+                                <li>Verify the video isn't age-restricted</li>
+                                <li>Try using the video ID instead of the full URL</li>
+                                <li>Ensure the video isn't private or deleted</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="spotify-issues" class="section">
+                    <h2>Spotify Issues</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>Spotify tracks not playing</h4>
+                        <p>When Spotify links fail to play.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Verify the track/playlist is public</li>
+                                <li>Check if the song is available on YouTube</li>
+                                <li>Try using the track name instead of Spotify link</li>
+                                <li>Ensure Spotify integration is working</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="local-files" class="section">
+                    <h2>Local File Issues</h2>
+                    
+                    <div class="troubleshooting-item">
+                        <h4>Local files not playing</h4>
+                        <p>When uploaded MP3 files don't play.</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Check if the file is under 25MB</li>
+                                <li>Ensure the file format is supported (MP3)</li>
+                                <li>Verify the file isn't corrupted</li>
+                                <li>Try re-uploading the file</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="note">
+                    <strong>Need more help?</strong> Please join our Discord server for personalized support and connect with our community!
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html> 
