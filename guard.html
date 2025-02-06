@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOU guard - Anti-Harassment Protection</title>
+    <style>
+        /* Reuse the same styles from index.html */
+        :root {
+            --timeline-width: 2px;
+            --dot-size: 12px;
+            --timeline-color: rgba(255, 255, 255, 0.85);
+            --active-dot-color: #ffffff;
+            --inactive-dot-color: rgba(255, 255, 255, 0.3);
+            --dot-border: 2px;
+            --bg-color: #000000;
+            --card-bg: #111111;
+            --card-hover: #1a1a1a;
+            --accent-color: #ffffff;
+            --glow-color: rgba(255, 255, 255, 0.9);
+            --blur-strength: 20px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #fff;
+            background: 
+                radial-gradient(circle at top right, rgba(255, 255, 255, 0.1) 0%, transparent 60%),
+                radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+                var(--bg-color);
+            min-height: 100vh;
+            background-image: linear-gradient(to bottom, #000000, #111111);
+            opacity: 0;
+            animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Reuse all the styles from index.html */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, var(--timeline-color) 0%, transparent 100%);
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+            color: #fff;
+            text-shadow: 
+                1px 1px 2px rgba(0, 0, 0, 0.3),
+                0 0 10px rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.2);
+            letter-spacing: -0.5px;
+            font-weight: 800;
+            background: none;
+            -webkit-text-fill-color: #fff;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-left: 0.2rem;
+            letter-spacing: 0.3px;
+            text-shadow: 
+                1px 1px 1px rgba(0, 0, 0, 0.2),
+                0 0 8px rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+
+        /* Reuse all other styles from index.html */
+        /* Add navigation styles */
+        nav {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: slideDown 0.8s ease-out forwards;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-brand img {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-brand span {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-items a {
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-items a:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            text-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.5),
+                0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-items a i {
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-items a:hover i {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .nav-items a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.9),
+                transparent
+            );
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-items a:hover::before {
+            transform: translateX(0);
+        }
+
+        .nav-items a.primary {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+        }
+
+        .nav-items a.primary:hover {
+            color: #fff;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-brand span::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+        }
+
+        .command-box {
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.05) 0%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.2rem 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 4px 24px -1px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .command-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .command-item {
+            display: flex;
+            align-items: center;
+            margin: 0.8rem 0;
+            padding: 0.8rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-name {
+            flex: 0 0 130px;
+            font-family: 'Consolas', monospace;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .command-desc {
+            margin-left: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 
+                    0 0 0 2px var(--active-dot-color),
+                    0 0 10px var(--glow-color),
+                    0 0 20px var(--glow-color),
+                    0 0 30px var(--glow-color);
+            }
+            50% {
+                box-shadow: 
+                    0 0 0 2px var(--active-dot-color),
+                    0 0 15px var(--glow-color),
+                    0 0 25px var(--glow-color),
+                    0 0 35px var(--glow-color);
+            }
+            100% {
+                box-shadow: 
+                    0 0 0 2px var(--active-dot-color),
+                    0 0 10px var(--glow-color),
+                    0 0 20px var(--glow-color),
+                    0 0 30px var(--glow-color);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .timeline {
+                padding-left: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .version-header {
+                padding: 1.5rem;
+            }
+
+            .keypoints {
+                padding: 1.5rem;
+            }
+
+            .nav-links {
+                padding: 0 1rem;
+            }
+        }
+
+        .keypoint:nth-child(1) { --keypoint-order: 1; }
+        .keypoint:nth-child(2) { --keypoint-order: 2; }
+        .keypoint:nth-child(3) { --keypoint-order: 3; }
+        .keypoint:nth-child(4) { --keypoint-order: 4; }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: calc(var(--dot-size) / 2);
+            top: 24px;
+            bottom: 24px;
+            width: 3px;
+            background: linear-gradient(180deg, 
+                var(--timeline-color) 0%,
+                rgba(255, 255, 255, 0.2) 100%);
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(255, 255, 255, 0.05);
+        }
+
+        .version-block {
+            position: relative;
+            margin-bottom: 4rem;
+            padding-left: 2rem;
+            color: white;
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: calc(0.5s + (var(--animation-order, 0) * 0.2s));
+        }
+
+        .version-block::before {
+            content: '';
+            position: absolute;
+            left: -23px;
+            top: 12px;
+            width: var(--dot-size);
+            height: var(--dot-size);
+            background: var(--inactive-dot-color);
+            border: var(--dot-border) solid var(--timeline-color);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .version-block::after {
+            content: '';
+            position: absolute;
+            left: -23px;
+            top: 12px;
+            width: var(--dot-size);
+            height: var(--dot-size);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .version-block:not(.inactive)::before {
+            background: var(--active-dot-color);
+            border: none;
+            box-shadow: 
+                0 0 0 2px var(--active-dot-color),
+                0 0 15px var(--glow-color),
+                0 0 25px var(--glow-color);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .version-block.inactive::before {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: none;
+        }
+
+        .version-header {
+            margin-bottom: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .version-header:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 8px 30px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .version-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .version-number {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .release-date {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .version-status {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .keypoints {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .keypoint {
+            position: relative;
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: fadeInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: calc(1s + (var(--keypoint-order, 0) * 0.1s));
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .keypoint:last-child {
+            margin-bottom: 0;
+        }
+
+        .keypoint::before {
+            display: none;
+        }
+
+        .keypoint h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .keypoint p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+            margin-left: 0;
+        }
+
+        .keypoint:hover {
+            border-left-color: rgba(255, 255, 255, 0.3);
+            padding-left: 1.5rem;
+        }
+
+        .keypoint:hover h4 {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .keypoint:hover p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .command-box:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(0, 0, 0, 0.35) 100%
+            );
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 8px 32px -2px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .command-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(6px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .command-desc::before {
+            content: '→';
+            position: absolute;
+            left: -4px;
+            color: rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .command-item:hover .command-desc::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <div class="nav-brand">
+                <img src="https://wallpapersok.com/images/high/a-purple-eye-with-purple-eyes-on-a-black-background-n619iwueli7docp7.jpg" alt="YOU music">
+                <span>YOU guard</span>
+            </div>
+            <div class="nav-items">
+                <a href="docs.html">Docs</a>
+                <a href="techroles.html">Techroles</a>
+                <a href="index.html" class="nav-link primary">YOU music</a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1337075495245713471&permissions=8&integration_type=0&scope=bot+applications.commands" class="nav-link primary">Add to Discord</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>YOU guard - Protection</h1>
+            <p>Server protection against harassment and inappropriate content</p>
+        </header>
+
+        <div class="timeline">
+            <div class="version-block">
+                <div class="version-header">
+                    <div class="version-info">
+                        <span class="version-number">v0.1.0</span>
+                        <span class="release-date">February 6, 2025</span>
+                    </div>
+                    <span class="version-status" style="background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.25); box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);">Release</span>
+                </div>
+
+                <ul class="keypoints">
+                    <li class="keypoint">
+                        <h4>Anti-Harassment System</h4>
+                        <p>
+                            <strong>Core Features:</strong><br>
+                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-left: 0.5rem;">
+                            • Content filtering<br>
+                            • Automatic message moderation<br>
+                            • Warning system with configurable thresholds<br>
+                            • Timeout enforcement<br>
+                            • Detailed logging of incidents
+                            </p>
+                        </p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Warning System</h4>
+                        <p>
+                            <div class="command-box">
+                                <div class="command-group">
+                                    <div class="command-title">Warning Commands</div>
+                                    <div class="command-item">
+                                        <span class="command-name">/checkwarnings</span>
+                                        <span class="command-desc">View warnings for a user</span>
+                                    </div>
+                                    <div class="command-item">
+                                        <span class="command-name">/clearwarnings</span>
+                                        <span class="command-desc">Clear user warnings (Admin)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <strong>Warning Features:</strong><br>
+                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-left: 0.5rem;">
+                            • Progressive warning system<br>
+                            • 30-day warning expiry<br>
+                            • Automatic timeout after max warnings<br>
+                            • Warning history tracking
+                            </p>
+                        </p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Content Filtering</h4>
+                        <p>
+                            <strong>Protected Content Types:</strong><br>
+                            • Inappropriate language<br>
+                            • Hate speech<br>
+                            • Discriminatory content<br>
+                            • NSFW content<br>
+                            • Spam detection<br><br>
+                            
+                            <strong>Filter Features:</strong><br>
+                            • Real-time message scanning<br>
+                            • Pattern recognition<br>
+                            • Unicode character analysis<br>
+                            • Context-aware filtering<br>
+                            • Bypass attempt detection
+                        </p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Moderation Tools</h4>
+                        <p>
+                            <strong>Administrative Features:</strong><br>
+                            • Detailed incident logging<br>
+                            • Customizable filter settings<br>
+                            • Moderation action tracking<br>
+                            • User history monitoring<br>
+                            • Auto-moderation rules
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html> 
