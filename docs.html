@@ -302,67 +302,50 @@
         }
 
         .troubleshooting-item {
-            background: rgba(15, 15, 15, 0.98);
-            padding: 2.5rem;
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.05) 0%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
-            margin: 2rem 0;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(20px);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.02);
-        }
-
-        .troubleshooting-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 0;
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            padding: 1px;
         }
 
         .troubleshooting-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
             box-shadow: 
-                0 10px 30px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-        }
-
-        .troubleshooting-item:hover::before {
-            opacity: 1;
+                0 12px 40px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(0, 0, 0, 0.35) 100%
+            );
         }
 
         .troubleshooting-item h4 {
-            color: #fff;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
             gap: 1rem;
-            position: relative;
-            z-index: 1;
         }
 
         .troubleshooting-item h4::before {
-            content: '';
-            width: 20px;
-            height: 20px;
-            background-image: url('https://wallpapersok.com/images/high/a-purple-eye-with-purple-eyes-on-a-black-background-n619iwueli7docp7.jpg');
-            background-size: cover;
-            border-radius: 4px;
+            content: '◆';
+            color: var(--accent-color);
+            font-size: 0.8rem;
         }
 
         .troubleshooting-item p {
@@ -373,22 +356,27 @@
         }
 
         .solution {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin-top: 2rem;
-            padding: 2rem;
-            position: relative;
-            z-index: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .solution:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .solution ol {
             list-style: none;
-            counter-reset: solution-counter;
+            counter-reset: item;
             padding-left: 0;
         }
 
-        .solution li {
-            counter-increment: solution-counter;
+        .solution ol li {
+            counter-increment: item;
             margin-bottom: 1rem;
             padding-left: 2.5rem;
             position: relative;
@@ -396,8 +384,8 @@
             align-items: center;
         }
 
-        .solution li::before {
-            content: counter(solution-counter);
+        .solution ol li::before {
+            content: counter(item);
             position: absolute;
             left: 0;
             width: 24px;
@@ -412,39 +400,117 @@
             color: #fff;
         }
 
+        .command-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .command-group {
+            margin-bottom: 2rem;
+        }
+
+        .command-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .command-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .command-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .command-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(10px);
+        }
+
+        .command-name {
+            font-family: 'Consolas', monospace;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-right: 1rem;
+            min-width: 120px;
+            text-align: center;
+        }
+
         .note {
-            background: transparent;
-            border: none;
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            border-radius: 16px;
+            padding: 2rem;
             margin: 3rem 0;
-            padding: 2rem 0 2rem 2rem;
+            text-align: center;
             position: relative;
             overflow: hidden;
-            border-left: 4px solid #4CAF50;
-            display: flex;
-            align-items: flex-start;
         }
 
         .note::before {
             content: '';
-            width: 24px;
-            height: 24px;
-            background-image: url('https://wallpapersok.com/images/high/a-purple-eye-with-purple-eyes-on-a-black-background-n619iwueli7docp7.jpg');
-            background-size: cover;
-            border-radius: 4px;
-            margin-right: 1rem;
-        }
-
-        .note::after {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
         }
 
         .note strong {
-            color: #4CAF50;
-            -webkit-text-fill-color: initial;
-            background: none;
+            font-size: 1.4rem;
             display: block;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .support-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .support-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes fadeInUp {
@@ -489,6 +555,20 @@
                 padding: 1.5rem;
             }
         }
+
+        /* Enhanced Styles */
+        .section {
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section:nth-child(1) { animation-delay: 0.2s; }
+        .section:nth-child(2) { animation-delay: 0.4s; }
+        .section:nth-child(3) { animation-delay: 0.6s; }
+        .section:nth-child(4) { animation-delay: 0.8s; }
+        .section:nth-child(5) { animation-delay: 1s; }
     </style>
 </head>
 <body>
@@ -501,6 +581,8 @@
             <div class="nav-items">
                 <a href="index.html"><i class="fas fa-history"></i><span>Changelog</span></a>
                 <a href="techroles.html"><i class="fas fa-users-cog"></i><span>Techroles</span></a>
+                <a href="guard.html"><i class="fas fa-shield-alt"></i><span>YOU guard</span></a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1336448011579953223&permissions=8&integration_type=0&scope=bot+applications.commands" class="nav-link primary"><i class="fas fa-plus"></i><span>Add to Discord</span></a>
             </div>
         </div>
     </nav>
@@ -508,174 +590,292 @@
     <div class="container">
         <div class="docs-grid">
             <div class="sidebar">
-                <div class="sidebar-category">Common Issues</div>
-                <a href="#no-sound" class="sidebar-link">No Sound Playing</a>
-                <a href="#connection-issues" class="sidebar-link">Connection Issues</a>
-                <a href="#playback-errors" class="sidebar-link">Playback Errors</a>
-                <a href="#queue-issues" class="sidebar-link">Queue Issues</a>
-                <a href="#command-errors" class="sidebar-link">Command Errors</a>
+                <div class="sidebar-category">Getting Started</div>
+                <a href="#setup" class="sidebar-link">Initial Setup</a>
+                <a href="#permissions" class="sidebar-link">Required Permissions</a>
+                <a href="#commands" class="sidebar-link">Basic Commands</a>
                 
-                <div class="sidebar-category">Platform-Specific</div>
-                <a href="#youtube-issues" class="sidebar-link">YouTube Issues</a>
-                <a href="#spotify-issues" class="sidebar-link">Spotify Issues</a>
-                <a href="#local-files" class="sidebar-link">Local File Issues</a>
+                <div class="sidebar-category">Music Features</div>
+                <a href="#playback" class="sidebar-link">Playback Controls</a>
+                <a href="#effects" class="sidebar-link">Audio Effects</a>
+                <a href="#playlists" class="sidebar-link">Playlist Management</a>
+                <a href="#favorites" class="sidebar-link">Favorites System</a>
+
+                <div class="sidebar-category">Troubleshooting</div>
+                <a href="#connection" class="sidebar-link">Connection Issues</a>
+                <a href="#audio" class="sidebar-link">Audio Problems</a>
+                <a href="#platform" class="sidebar-link">Platform-Specific</a>
+                <a href="#commands-issues" class="sidebar-link">Command Issues</a>
             </div>
 
             <div class="content">
-                <h1>Troubleshooting Guide</h1>
-                <p>Find solutions to common issues and problems you might encounter while using YOU music bot.</p>
+                <h1>Documentation & Support</h1>
+                <p>Complete guide for setting up and using YOU music bot in your Discord server.</p>
 
-                <section id="no-sound" class="section">
-                    <h2>No Sound Playing</h2>
-                    
+                <section id="setup" class="section">
+                    <h2>Initial Setup</h2>
                     <div class="troubleshooting-item">
-                        <h4>Bot is in voice channel but no audio</h4>
-                        <p>When the bot is connected but you can't hear any sound.</p>
+                        <h4>Getting Started</h4>
+                        <p>Quick steps to get YOU music running in your server.</p>
                         <div class="solution">
                             <ol>
-                                <li>Check if the bot has proper permissions (View Channel, Connect, Speak)</li>
-                                <li>Verify your own volume settings in Discord</li>
-                                <li>Try disconnecting and reconnecting the bot</li>
-                                <li>Check if the bot is not muted in your Discord settings</li>
+                                <li>Click "Add to Discord" and select your server</li>
+                                <li>Grant the required permissions</li>
+                                <li>Use /help to see available commands</li>
+                                <li>Join a voice channel and start playing music!</li>
                             </ol>
                         </div>
                     </div>
                 </section>
 
-                <section id="connection-issues" class="section">
+                <section id="permissions" class="section">
+                    <h2>Required Permissions</h2>
+                    <div class="troubleshooting-item">
+                        <h4>Essential Permissions</h4>
+                        <p>Make sure the bot has these permissions for full functionality:</p>
+                        <div class="solution">
+                            <ol>
+                                <li>View Channels & Messages</li>
+                                <li>Send Messages & Embeds</li>
+                                <li>Connect to Voice Channels</li>
+                                <li>Speak in Voice Channels</li>
+                                <li>Use Voice Activity</li>
+                                <li>Add Reactions</li>
+                                <li>Attach Files (for lyrics)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="commands" class="section">
+                    <h2>Basic Commands</h2>
+                    <div class="troubleshooting-item">
+                        <h4>Essential Commands</h4>
+                        <div class="command-box">
+                            <div class="command-group">
+                                <div class="command-title">Music Controls</div>
+                                <div class="command-item">
+                                    <span class="command-name">/play</span>
+                                    <span class="command-desc">Play a song or playlist</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/pause</span>
+                                    <span class="command-desc">Pause current playback</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/resume</span>
+                                    <span class="command-desc">Resume playback</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/skip</span>
+                                    <span class="command-desc">Skip current track</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/stop</span>
+                                    <span class="command-desc">Stop and clear queue</span>
+                                </div>
+                            </div>
+                            <div class="command-group">
+                                <div class="command-title">Effects & Features</div>
+                                <div class="command-item">
+                                    <span class="command-name">/nightcore</span>
+                                    <span class="command-desc">Toggle nightcore effect</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/slowed</span>
+                                    <span class="command-desc">Toggle slowed effect</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/combined</span>
+                                    <span class="command-desc">Mix multiple effects</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="playback" class="section">
+                    <h2>Playback Controls</h2>
+                    <div class="troubleshooting-item">
+                        <h4>Advanced Playback Features</h4>
+                        <div class="command-box">
+                            <div class="command-group">
+                                <div class="command-title">Queue Management</div>
+                                <div class="command-item">
+                                    <span class="command-name">/queue</span>
+                                    <span class="command-desc">View current queue</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/clear</span>
+                                    <span class="command-desc">Clear the queue</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">/loop</span>
+                                    <span class="command-desc">Toggle loop mode</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="effects" class="section">
+                    <h2>Audio Effects</h2>
+                    <div class="troubleshooting-item">
+                        <h4>Available Effects</h4>
+                        <p>Enhance your music with these audio effects:</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Nightcore (increased speed & pitch)</li>
+                                <li>Slowed + Reverb (atmospheric effect)</li>
+                                <li>Combined Effects (mix multiple effects)</li>
+                                <li>Volume Control (0-200%)</li>
+                                <li>Bass Boost (multiple levels)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="connection" class="section">
                     <h2>Connection Issues</h2>
-                    
                     <div class="troubleshooting-item">
-                        <h4>Bot won't join voice channel</h4>
-                        <p>When the bot fails to join your voice channel.</p>
+                        <h4>Common Connection Problems</h4>
+                        <p>Solutions for connection-related issues:</p>
                         <div class="solution">
                             <ol>
-                                <li>Ensure you're in a voice channel before using commands</li>
-                                <li>Check if the bot has permission to join the channel</li>
-                                <li>Verify the channel user limit isn't reached</li>
-                                <li>Try moving to a different voice channel</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="troubleshooting-item">
-                        <h4>Bot disconnects randomly</h4>
-                        <p>When the bot unexpectedly leaves the voice channel.</p>
-                        <div class="solution">
-                            <ol>
-                                <li>Check your server's region settings</li>
+                                <li>Verify bot has proper permissions</li>
+                                <li>Check server region compatibility</li>
                                 <li>Ensure stable internet connection</li>
-                                <li>Verify if the bot has been inactive for too long</li>
-                                <li>Check if the bot is experiencing high load</li>
+                                <li>Try reconnecting the bot</li>
+                                <li>Check voice channel user limit</li>
                             </ol>
                         </div>
                     </div>
                 </section>
 
-                <section id="playback-errors" class="section">
-                    <h2>Playback Errors</h2>
-                    
+                <section id="audio" class="section">
+                    <h2>Audio Problems</h2>
                     <div class="troubleshooting-item">
-                        <h4>Audio stuttering or lag</h4>
-                        <p>When the music playback is not smooth.</p>
+                        <h4>Audio Quality Issues</h4>
+                        <p>Improve your audio experience:</p>
                         <div class="solution">
                             <ol>
-                                <li>Check your internet connection stability</li>
-                                <li>Try lowering the audio quality using /settings</li>
-                                <li>Ensure no bandwidth-heavy activities are running</li>
-                                <li>Consider switching to a closer server region</li>
+                                <li>Use high-quality audio sources</li>
+                                <li>Check server region for optimal connection</li>
+                                <li>Adjust volume levels appropriately</li>
+                                <li>Verify voice channel bitrate settings</li>
+                                <li>Monitor system resource usage</li>
                             </ol>
                         </div>
                     </div>
                 </section>
 
-                <section id="queue-issues" class="section">
-                    <h2>Queue Issues</h2>
-                    
+                <section id="platform" class="section">
+                    <h2>Platform-Specific</h2>
                     <div class="troubleshooting-item">
-                        <h4>Queue not updating</h4>
-                        <p>When the queue appears stuck or doesn't update properly.</p>
+                        <h4>YouTube Issues</h4>
+                        <p>Common YouTube playback problems and solutions:</p>
                         <div class="solution">
                             <ol>
-                                <li>Use /queue refresh to force a queue update</li>
-                                <li>Clear the queue and add songs again</li>
-                                <li>Check if the bot has proper permissions</li>
-                                <li>Restart the bot in your server</li>
+                                <li>Video unavailable in your region - Try using a different version</li>
+                                <li>Age-restricted content - Bot cannot play these videos</li>
+                                <li>Private videos - Ensure video is public or unlisted</li>
+                                <li>Playlist errors - Try adding songs individually</li>
+                                <li>Long videos - Maximum length is 3 hours</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="troubleshooting-item">
+                        <h4>Spotify Integration</h4>
+                        <p>Troubleshooting Spotify playback:</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Ensure playlist/track is public</li>
+                                <li>Wait for playlist processing on first load</li>
+                                <li>Check if track is available on YouTube</li>
+                                <li>Use track title instead of Spotify link if issues persist</li>
+                                <li>Verify Spotify integration is enabled</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="troubleshooting-item">
+                        <h4>Local Files</h4>
+                        <p>Guidelines for local file playback:</p>
+                        <div class="solution">
+                            <ol>
+                                <li>Maximum file size: 25MB</li>
+                                <li>Supported formats: MP3, WAV, OGG</li>
+                                <li>Files must not be corrupted</li>
+                                <li>Proper metadata recommended</li>
+                                <li>Upload in supported channel</li>
                             </ol>
                         </div>
                     </div>
                 </section>
 
-                <section id="command-errors" class="section">
-                    <h2>Command Errors</h2>
-                    
+                <section id="commands-issues" class="section">
+                    <h2>Command Issues</h2>
                     <div class="troubleshooting-item">
-                        <h4>Commands not responding</h4>
-                        <p>When the bot doesn't respond to commands.</p>
+                        <h4>Common Command Problems</h4>
+                        <p>Solutions for command-related issues:</p>
                         <div class="solution">
                             <ol>
-                                <li>Verify the command syntax is correct</li>
-                                <li>Check if the bot has proper permissions</li>
-                                <li>Ensure you're using commands in the correct channel</li>
+                                <li>Verify correct command syntax and spelling</li>
+                                <li>Check if bot has required permissions</li>
+                                <li>Ensure you're using commands in allowed channels</li>
                                 <li>Wait a few seconds between commands</li>
+                                <li>Check if bot is responding to other commands</li>
                             </ol>
                         </div>
                     </div>
-                </section>
 
-                <section id="youtube-issues" class="section">
-                    <h2>YouTube Issues</h2>
-                    
                     <div class="troubleshooting-item">
-                        <h4>YouTube playback fails</h4>
-                        <p>When YouTube links don't play properly.</p>
-                        <div class="solution">
-                            <ol>
-                                <li>Check if the video is available in your region</li>
-                                <li>Verify the video isn't age-restricted</li>
-                                <li>Try using the video ID instead of the full URL</li>
-                                <li>Ensure the video isn't private or deleted</li>
-                            </ol>
+                        <h4>Permission Requirements</h4>
+                        <p>Required permissions for commands:</p>
+                        <div class="command-box">
+                            <div class="command-group">
+                                <div class="command-title">Music Commands</div>
+                                <div class="command-item">
+                                    <span class="command-name">Basic Commands</span>
+                                    <span class="command-desc">Send Messages, View Channel</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">Voice Commands</span>
+                                    <span class="command-desc">Connect, Speak, Use Voice Activity</span>
+                                </div>
+                                <div class="command-item">
+                                    <span class="command-name">Admin Commands</span>
+                                    <span class="command-desc">Manage Channels, Manage Messages</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </section>
 
-                <section id="spotify-issues" class="section">
-                    <h2>Spotify Issues</h2>
-                    
                     <div class="troubleshooting-item">
-                        <h4>Spotify tracks not playing</h4>
-                        <p>When Spotify links fail to play.</p>
+                        <h4>Command Cooldowns</h4>
+                        <p>Understanding command rate limits:</p>
                         <div class="solution">
                             <ol>
-                                <li>Verify the track/playlist is public</li>
-                                <li>Check if the song is available on YouTube</li>
-                                <li>Try using the track name instead of Spotify link</li>
-                                <li>Ensure Spotify integration is working</li>
-                            </ol>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="local-files" class="section">
-                    <h2>Local File Issues</h2>
-                    
-                    <div class="troubleshooting-item">
-                        <h4>Local files not playing</h4>
-                        <p>When uploaded MP3 files don't play.</p>
-                        <div class="solution">
-                            <ol>
-                                <li>Check if the file is under 25MB</li>
-                                <li>Ensure the file format is supported (MP3)</li>
-                                <li>Verify the file isn't corrupted</li>
-                                <li>Try re-uploading the file</li>
+                                <li>Basic commands: 3 second cooldown</li>
+                                <li>Queue management: 5 second cooldown</li>
+                                <li>Effect commands: 10 second cooldown</li>
+                                <li>Admin commands: 30 second cooldown</li>
+                                <li>Playlist loading: 60 second cooldown</li>
                             </ol>
                         </div>
                     </div>
                 </section>
 
                 <div class="note">
-                    <strong>Need more help?</strong> Please join our Discord server for personalized support and connect with our community!
+                    <div class="note-content">
+                        <strong>Need More Help?</strong>
+                        <p>Join our support server for personalized assistance, feature updates, and connect with our community!</p>
+                        <div class="support-buttons">
+                            <a href="https://discord.gg/support" class="support-button"><i class="fab fa-discord"></i> Join Support Server</a>
+                            <a href="https://discord.com/oauth2/authorize?client_id=1336448011579953223&permissions=8&integration_type=0&scope=bot+applications.commands" class="support-button primary"><i class="fas fa-plus"></i> Add to Discord</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
