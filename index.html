@@ -580,6 +580,174 @@
         .keypoint:nth-child(10) { --keypoint-order: 10; }
         .keypoint:nth-child(11) { --keypoint-order: 11; }
         .keypoint:nth-child(12) { --keypoint-order: 12; }
+
+        .keypoint pre {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            font-family: 'Consolas', monospace;
+            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .keypoint pre:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .keypoint code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #fff;
+        }
+
+        /* Command box styles */
+        .command-box {
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.05) 0%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.2rem 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 4px 24px -1px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+        }
+
+        .command-box:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(0, 0, 0, 0.35) 100%
+            );
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 8px 32px -2px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .command-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .command-group:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .command-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .command-item {
+            display: flex;
+            align-items: center;
+            margin: 0.8rem 0;
+            padding: 0.8rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(6px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .command-name {
+            flex: 0 0 130px;
+            font-family: 'Consolas', monospace;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .command-desc {
+            margin-left: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .command-desc::before {
+            content: '→';
+            position: absolute;
+            left: -4px;
+            color: rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .command-item:hover .command-desc::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body>
@@ -606,10 +774,185 @@
             <div class="version-block">
                 <div class="version-header">
                     <div class="version-info">
+                        <span class="version-number">v0.2.5</span>
+                        <span class="release-date">February 6, 2025</span>
+                    </div>
+                    <span class="version-status" style="background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.25); box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);">Major Update</span>
+                </div>
+
+                <ul class="keypoints">
+                    <li class="keypoint">
+                        <h4>Combined Effects Engine</h4>
+                        <p>
+                            <strong>Command Reference:</strong>
+                            <div class="command-box">
+                                <div class="command-group">
+                                    <div class="command-title">Available Commands</div>
+                                    <div class="command-item">
+                                        <span class="command-name">//combined</span>
+                                        <span class="command-desc">Main command</span>
+                                    </div>
+                                    <div class="command-item">
+                                        <span class="command-name">//ncsr</span>
+                                        <span class="command-desc">Quick access</span>
+                                    </div>
+                                    <div class="command-item">
+                                        <span class="command-name">//mix</span>
+                                        <span class="command-desc">Alternative</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <strong>Features:</strong><br>
+                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-left: 0.5rem;">
+                            • Fusion of Nightcore and Slowed + Reverb effects<br>
+                            • Enhanced audio processing pipeline<br>
+                            • Real-time effect blending<br>
+                            • Optimized sound quality<br>
+                            • Automatic volume normalization
+                            </p><br>
+                            
+                            <strong>Technical Specs:</strong><br>
+                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-left: 0.5rem;">
+                            • 115% Speed boost with reverb layering<br>
+                            • 30ms echo delay for atmosphere<br>
+                            • Enhanced bass and treble balance<br>
+                            • Dynamic audio normalization
+                            </p><br>
+                            
+                            <strong>Core Features:</strong><br>
+                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-left: 0.5rem;">
+                            • Personal favorites collection per user<br>
+                            • Intelligent duplicate prevention<br>
+                            • Track metadata preservation<br>
+                            • Timestamps and add dates<br>
+                            • Quick access system
+                            </p><br>
+                            
+                            <strong>Visual Elements:</strong><br>
+                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-left: 0.5rem;">
+                            • Dynamic thumbnails display<br>
+                            • Modern embed design<br>
+                            • Organized track listing<br>
+                            • Visual feedback system<br>
+                            • Status indicators
+                            </p>
+                        </p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Favorites System</h4>
+                        <p>
+                            <strong>Command Reference:</strong>
+                            <div class="command-box">
+                                <div class="command-group">
+                                    <div class="command-title">Save Track</div>
+                                    <div class="command-item">
+                                        <span class="command-name">//fav</span>
+                                        <span class="command-desc">Quick save</span>
+                                    </div>
+                                    <div class="command-item">
+                                        <span class="command-name">//favorite</span>
+                                        <span class="command-desc">Full command</span>
+                                    </div>
+                                    <div class="command-item">
+                                        <span class="command-name">//like</span>
+                                        <span class="command-desc">Alternative</span>
+                                    </div>
+                                </div>
+                                <div class="command-group">
+                                    <div class="command-title">View List</div>
+                                    <div class="command-item">
+                                        <span class="command-name">//favlist</span>
+                                        <span class="command-desc">Show collection</span>
+                                    </div>
+                                    <div class="command-item">
+                                        <span class="command-name">//favorites</span>
+                                        <span class="command-desc">Full command</span>
+                                    </div>
+                                    <div class="command-item">
+                                        <span class="command-name">//likes</span>
+                                        <span class="command-desc">Alternative</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <strong>Core Features:</strong><br>
+                            • Personal favorites collection per user<br>
+                            • Intelligent duplicate prevention<br>
+                            • Track metadata preservation<br>
+                            • Timestamps and add dates<br>
+                            • Quick access system<br><br>
+                            <strong>Visual Elements:</strong><br>
+                            • Dynamic thumbnails display<br>
+                            • Modern embed design<br>
+                            • Organized track listing<br>
+                            • Visual feedback system<br>
+                            • Status indicators
+                        </p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Technical Improvements</h4>
+                        <p>
+                            <strong>Audio Processing:</strong><br>
+                            • Fixed memory leaks in effect processing<br>
+                            • Improved audio buffer management<br>
+                            • Enhanced stream stability<br>
+                            • Optimized effect transitions<br>
+                            • Better bitrate handling<br><br>
+                            
+                            <strong>Visual Elements:</strong><br>
+                            • Fixed thumbnail loading in embeds<br>
+                            • Improved progress bar accuracy<br>
+                            • Enhanced visual feedback<br>
+                            • Better status updates<br>
+                            • Consistent styling<br><br>
+                            
+                            <strong>Performance:</strong><br>
+                            • Reduced memory usage<br>
+                            • Faster command response<br>
+                            • Better error recovery<br>
+                            • Improved connection stability<br>
+                            • Enhanced cache management
+                        </p>
+                    </li>
+
+                    <li class="keypoint">
+                        <h4>Bug Fixes</h4>
+                        <p>
+                            <strong>Critical Fixes:</strong><br>
+                            • Fixed effect processing memory leaks<br>
+                            • Resolved connection drops during effect changes<br>
+                            • Fixed duration calculation accuracy<br>
+                            • Improved URL validation system<br>
+                            • Enhanced error handling<br><br>
+                            
+                            <strong>Quality of Life:</strong><br>
+                            • Fixed progress tracking desyncs<br>
+                            • Improved command response time<br>
+                            • Better error messages<br>
+                            • Enhanced metadata handling<br>
+                            • Fixed volume consistency<br><br>
+                            
+                            <strong>System Stability:</strong><br>
+                            • Better memory management<br>
+                            • Improved cache cleanup<br>
+                            • Enhanced connection recovery<br>
+                            • Fixed resource leaks<br>
+                            • Better state management
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="version-block inactive">
+                <div class="version-header">
+                    <div class="version-info">
                         <span class="version-number">v0.2.1</span>
                         <span class="release-date">February 6, 2025</span>
                     </div>
-                    <span class="version-status">Current</span>
+                    <span class="version-status">Previous</span>
                 </div>
 
                 <ul class="keypoints">
