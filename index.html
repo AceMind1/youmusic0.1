@@ -381,35 +381,39 @@
             align-items: center;
         }
 
-        .nav-links a {
+        .nav-items a {
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
-            padding: 0.5rem 1rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            letter-spacing: 0.3px;
+            gap: 0.5rem;
             position: relative;
             overflow: hidden;
         }
 
-        .nav-links a.invite-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 0.5rem 1.2rem;
-        }
-
-        .nav-links a.invite-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
+        .nav-items a:hover {
+            color: #fff;
             transform: translateY(-2px);
+            text-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.5),
+                0 0 25px rgba(255, 255, 255, 0.3);
         }
 
-        .nav-links a::before {
+        .nav-items a i {
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-items a:hover i {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .nav-items a::before {
             content: '';
             position: absolute;
             bottom: 0;
@@ -423,72 +427,23 @@
                 transparent
             );
             transform: translateX(-100%);
-            transition: transform 0.4s ease;
+            transition: transform 0.3s ease;
         }
 
-        .nav-links a:hover {
-            color: #fff;
-            transform: translateY(-2px) scale(1.05);
-            text-shadow: 
-                0 0 15px rgba(255, 255, 255, 0.5),
-                0 0 25px rgba(255, 255, 255, 0.3),
-                0 0 35px rgba(255, 255, 255, 0.2);
-        }
-
-        .nav-links a:hover::before {
+        .nav-items a:hover::before {
             transform: translateX(0);
-            animation: glow 1.5s linear infinite;
         }
 
-        .nav-links a i {
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            color: rgba(255, 255, 255, 0.8);
+        .nav-items a.primary {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
         }
 
-        .nav-links a:hover i {
-            transform: scale(1.15) rotate(-5deg);
+        .nav-items a.primary:hover {
             color: #fff;
             text-shadow: 
-                0 0 15px rgba(255, 255, 255, 0.5),
-                0 0 25px rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-links a span {
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s ease;
-        }
-
-        .nav-links a:hover span {
-            color: #fff;
-            text-shadow: 
-                0 0 15px rgba(255, 255, 255, 0.5),
-                0 0 25px rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-links a.github-link {
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .nav-links a.github-link:hover {
-            color: #fff;
-            transform: translateY(-2px) scale(1.08);
-        }
-
-        @keyframes glow {
-            0%, 50%, 100% {
-                text-shadow: none;
-            }
-        }
-
-        /* Update the nav items to wrap text in span */
-        .nav-items a {
-            white-space: nowrap;
-        }
-
-        .nav-items a i {
-            margin-right: 0.2rem;
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.4);
         }
 
         @keyframes fadeIn {
@@ -759,7 +714,8 @@
             </div>
             <div class="nav-items">
                 <a href="docs.html"><i class="fas fa-book"></i><span>Docs</span></a>
-                <a href="https://discord.com/oauth2/authorize?client_id=1336448011579953223&permissions=8&integration_type=0&scope=bot+applications.commands" class="invite-btn"><i class="fas fa-plus"></i><span>Add to Discord</span></a>
+                <a href="techroles.html"><i class="fas fa-users-cog"></i><span>Techroles</span></a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1336448011579953223&permissions=8&integration_type=0&scope=bot+applications.commands" class="nav-link primary"><i class="fas fa-plus"></i><span>Add to Discord</span></a>
             </div>
         </div>
     </nav>
